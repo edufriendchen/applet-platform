@@ -11,11 +11,11 @@ import (
 )
 
 type RestHandler struct {
-	activity activity.IActivityManagement
+	activity activity.IActivityService
 }
 
 func NewRestHandler(
-	activity activity.IActivityManagement,
+	activity activity.IActivityService,
 ) *RestHandler {
 	return &RestHandler{
 		activity: activity,
@@ -32,7 +32,7 @@ func (rh *RestHandler) Mount(router *route.RouterGroup) {
 }
 
 func (rh *RestHandler) GetActivityList(ctx context.Context, c *app.RequestContext) {
-	var req activity.ListActivityRequest
+	var req activity.Request
 	err := c.BindAndValidate(&req)
 
 	res, err := rh.activity.GetActivityList(ctx, req)

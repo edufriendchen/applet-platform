@@ -13,7 +13,7 @@ import (
 )
 
 type Application struct {
-	ActivityManagement   activity.IActivityManagement
+	ActivityService      activity.IActivityService
 	SocietyManagement    society.ISocietyManagement
 	FileManagement       file.IFileManagement
 	AuthManagement       auth.IAuthService
@@ -28,9 +28,9 @@ func NewApplication(
 	tokenManager jwt.TokenManagerService,
 ) Application {
 	return Application{
-		ActivityManagement: activity.NewActivityManagement(cache, repository.ActivityRepository),
-		FileManagement:     file.NewFileManagement(storage, repository.FileRepository),
-		AuthManagement:     auth.NewAuthService(cache, repository.MemberRepository),
+		ActivityService: activity.NewActivityService(cache, repository.ActivityRepository),
+		FileManagement:  file.NewFileManagement(storage, repository.FileRepository),
+		AuthManagement:  auth.NewAuthService(cache, repository.MemberRepository),
 		WechatAuthManagement: auth.NewWechatAuthService(
 			viper.GetString("third.party.auth.wechat.app-id"),
 			viper.GetString("third.party.auth.wechat.app-secret"),

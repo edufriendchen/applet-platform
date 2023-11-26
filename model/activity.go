@@ -14,17 +14,17 @@ type Activity struct {
 	Type      constant.ActivityType `json:"type"`
 	StartTime *time.Time            `json:"start_time"`
 	EndTime   *time.Time            `json:"end_time"`
-	Status    Status                `json:"status"`
+	Status    constant.Status       `json:"status"`
 	BaseModel
 }
 
 type ActivityRecord struct {
-	ID            uint64 `json:"id"`
-	ActivityID    uint64 `json:"activity_id"`
-	ParticipantID uint64 `json:"participant_id"`
-	Type          int    `json:"type"`
-	Link          string `json:"link"`
-	Note          string `json:"note"`
-	Status        int    `json:"status"`
+	ID            uint64          `json:"id"`
+	ActivityID    uint64          `json:"activity_id"`
+	ParticipantID uint64          `json:"participant_id"`
+	Type          int             `json:"type"`
+	Link          string          `json:"link"`
+	Note          string          `json:"note"`
+	Status        constant.Status `json:"status"`
 	BaseModel
 }

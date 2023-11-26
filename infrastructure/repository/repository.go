@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"github.com/edufriendchen/applet-platform/model"
 	"github.com/jmoiron/sqlx"
 )
@@ -22,6 +23,8 @@ func NewRepository(conn *sqlx.DB) Repository {
 type IActivityRepository interface {
 	GetActivityTotal(req *model.Activity) error
 	GetActivityList(pagination model.Pagination, req *model.Activity) ([]model.Activity, error)
+	CreateActivityRecord(ctx context.Context, req *model.ActivityRecord) error
+	UpdateActivityRecord(ctx context.Context, req *model.ActivityRecord) error
 }
 
 type IFileRepository interface {

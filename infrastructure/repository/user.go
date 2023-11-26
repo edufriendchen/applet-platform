@@ -5,15 +5,15 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type MemberRepository struct {
+type UserRepository struct {
 	conn *sqlx.DB
 }
 
 // GetMemberList 获取会员列表
-func (mdb *MemberRepository) GetMemberList(req model.Member) ([]model.Member, error) {
+func (mdb *UserRepository) GetMemberList(req model.User) ([]model.User, error) {
 	return nil, nil
 }
 
-func (mdb *MemberRepository) Create(req *model.Member) error {
+func (mdb *UserRepository) Create(req *model.User) error {
 	return nil
 }

@@ -14,10 +14,3 @@ type Pagination struct {
 	Page    int  `json:"page"`
 	IsDESC  bool `json:"is_desc"`
 }
-
-type Status int
-
-const (
-	InvalidStatus Status = 1
-	ActivityStatus
-)

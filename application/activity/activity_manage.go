@@ -3,6 +3,7 @@ package activity
 import (
 	"context"
 	"fmt"
+	"github.com/edufriendchen/applet-platform/common"
 	"github.com/edufriendchen/applet-platform/constant"
 
 	"github.com/cloudwego/hertz/pkg/common/hlog"
@@ -10,7 +11,7 @@ import (
 )
 
 // GetActivityList 获取活动列表
-func (s *Management) GetActivityList(ctx context.Context, req ListActivityRequest) ([]ListActivityResponse, error) {
+func (s *Service) GetActivityList(ctx context.Context, req Request) ([]Response, error) {
 	pagination := model.Pagination{
 		PerPage: req.PerPage,
 		Page:    req.Page,
@@ -19,8 +20,8 @@ func (s *Management) GetActivityList(ctx context.Context, req ListActivityReques
 	data, err := s.activityRepository.GetActivityList(pagination, &model.Activity{
 		ID:        req.ID,
 		Type:      req.Type,
-		StartTime: &req.StartTime,
-		EndTime:   &req.EndTime,
+		StartTime: req.StartTime,
+		EndTime:   req.EndTime,
 	})
 	if err != nil {
 		hlog.CtxErrorf(ctx, "[GetActivityList] - GetActivityList err", err)
@@ -28,7 +29,7 @@ func (s *Management) GetActivityList(ctx context.Context, req ListActivityReques
 		return nil, err
 	}
 
-	var res []ListActivityResponse
+	var res []Response
 	for _, item := range data {
 		key := fmt.Sprintf(constant.ActivityVisitNumPrefix, item.ID)
 		num, err := s.cache.GetInt(key)
@@ -37,8 +38,16 @@ func (s *Management) GetActivityList(ctx context.Context, req ListActivityReques
 
 			return nil, err
 		}
-		res = append(res, ListActivityResponse{
-			VisitNum: int64(num),
+		res = append(res, Response{
+			ID:        item.ID,
+			PosterUrl: item.PosterURL,
+			Title:     item.Title,
+			Type:      item.Type,
+			Welfare:   item.Welfare,
+			StartTime: item.StartTime,
+			EndTime:   item.EndTime,
+			Able:      item.Status == 1,
+			VisitNum:  int64(num),
 		})
 	}
 
@@ -46,18 +55,62 @@ func (s *Management) GetActivityList(ctx context.Context, req ListActivityReques
 }
 
 // GetActivityDetail 获取活动详情
-func (s *Management) GetActivityDetail(ctx context.Context, id model.Activity) ([]ListActivityResponse, error) {
-	return nil, nil
+func (s *Service) GetActivityDetail(ctx context.Context, id uint64) (DetailResponse, error) {
+	return DetailResponse{}, nil
 }
 
 // ParticipateActivity 参与活动
-func (s *Management) ParticipateActivity(ctx context.Context, req model.Activity) error {
+func (s *Service) ParticipateActivity(ctx context.Context, id uint64) error {
+
+	memberID := ctx.Value(constant.CtxMemberIDInfo).(uint64)
+	if memberID == 0 {
+		hlog.CtxErrorf(ctx, "[AbandonActivity] - Get Context with user id is 0")
+
+		return common.ErrUserNotFound
+	}
+
+	err := s.activityRepository.CreateActivityRecord(ctx, &model.ActivityRecord{
+		ActivityID:    id,
+		ParticipantID: memberID,
+		Status:        constant.Pending,
+	})
+	if err != nil {
+		hlog.CtxErrorf(ctx, "[AbandonActivity] - UpdateActivityRecord", err)
+
+		return err
+	}
 
 	return nil
 }
 
 // AbandonActivity 放弃活动
-func (s *Management) AbandonActivity(ctx context.Context, req model.Activity) error {
+func (s *Service) AbandonActivity(ctx context.Context, req AbandonRequest) error {
+
+	err := s.activityRepository.UpdateActivityRecord(ctx, &model.ActivityRecord{
+		Note:   req.Reason,
+		Status: constant.Deactivate,
+	})
+	if err != nil {
+		hlog.CtxErrorf(ctx, "[AbandonActivity] - UpdateActivityRecord", err)
+
+		return err
+	}
+
+	return nil
+}
+
+// SubmitActivity 提交活动
+func (s *Service) SubmitActivity(ctx context.Context, req model.Activity) error {
+
+	err := s.activityRepository.UpdateActivityRecord(ctx, &model.ActivityRecord{
+		Note:   "",
+		Status: constant.Active,
+	})
+	if err != nil {
+		hlog.CtxErrorf(ctx, "[SubmitActivity] - UpdateActivityRecord", err)
+
+		return err
+	}
 
 	return nil
 }

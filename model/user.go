@@ -2,8 +2,8 @@ package model
 
 import "github.com/edufriendchen/applet-platform/constant"
 
-type Member struct {
-	ID        uint64                `json:"id" gorm:"primarykey"`
+type User struct {
+	ID        uint64                `json:"id"`
 	AvatarURL string                `json:"avatar_url"`
 	Phone     string                `json:"phone"`
 	WXOpenID  string                `json:"wx_open_id"`
@@ -15,7 +15,7 @@ type Member struct {
 	BaseModel
 }
 
-type SimpleMember struct {
+type SimpleUser struct {
 	Avatar   string `json:"avatar"`
 	NickName string `json:"nick_name"`
 }

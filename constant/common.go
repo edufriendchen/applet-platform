@@ -7,3 +7,9 @@ const (
 	Pending
 	Active
 )
+
+type CtxInfo string
+
+const (
+	CtxMemberIDInfo CtxInfo = "member_id"
+)

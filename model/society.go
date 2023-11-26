@@ -2,8 +2,6 @@ package model
 
 import "github.com/edufriendchen/applet-platform/constant"
 
-const ()
-
 type Society struct {
 	ID                uint64          `gorm:"primaryKey"`
 	Avatar            string          `json:"avatar"`
