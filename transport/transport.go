@@ -12,7 +12,7 @@ import (
 func NewHttpServer(application application.Application, router *route.RouterGroup) {
 	router.Use()
 	societyRh.NewRestHandler(application.SocietyManagement).Mount(router)
-	activityRh.NewRestHandler(application.ActivityManagement).Mount(router)
+	activityRh.NewRestHandler(application.ActivityService).Mount(router)
 	fileRh.NewRestHandler(application.FileManagement).Mount(router)
 	auth.NewRestHandler(application.AuthManagement, application.WechatAuthManagement, application.TiktokAuthManagement).Mount(router)
 }

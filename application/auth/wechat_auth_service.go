@@ -18,27 +18,27 @@ import (
 )
 
 type WechatAuthProvider struct {
-	appid            string
-	appSecret        string
-	token            string
-	cache            cache.CacheStore
-	memberRepository repository.MemberRepository
-	tokenManager     jwt.TokenManagerService
+	appid          string
+	appSecret      string
+	token          string
+	cache          cache.CacheStore
+	userRepository repository.UserRepository
+	tokenManager   jwt.TokenManagerService
 }
 
 func NewWechatAuthService(
 	appid string,
 	appSecret string,
 	token string,
-	memberRepository repository.MemberRepository,
+	userRepository repository.UserRepository,
 	tokenManager jwt.TokenManagerService,
 ) ThirdPartyAuthService {
 	return &WechatAuthProvider{
-		appid:            appid,
-		appSecret:        appSecret,
-		token:            token,
-		memberRepository: memberRepository,
-		tokenManager:     tokenManager,
+		appid:          appid,
+		appSecret:      appSecret,
+		token:          token,
+		userRepository: userRepository,
+		tokenManager:   tokenManager,
 	}
 }
 
@@ -88,7 +88,7 @@ func (s *WechatAuthProvider) LoginCredentialsVerification(ctx context.Context, c
 
 	openID := result["openid"].(string)
 
-	members, err := s.memberRepository.GetMemberList(model.Member{
+	members, err := s.userRepository.GetUserList(ctx, model.User{
 		WXOpenID: openID,
 	})
 	if err != nil {
@@ -99,12 +99,12 @@ func (s *WechatAuthProvider) LoginCredentialsVerification(ctx context.Context, c
 
 	var membersID int64 = 0
 	if len(members) == 0 {
-		newMember := model.Member{
+		newMember := model.User{
 			ID:       1,
 			WXOpenID: openID,
 			Status:   constant.ExternalMemberActive,
 		}
-		err := s.memberRepository.Create(&newMember)
+		err := s.userRepository.CreateUser(ctx, &newMember)
 		if err != nil {
 			hlog.Error("[LoginCredentialsVerification] memberRepository.Create", err)
 
@@ -171,7 +171,7 @@ func (s *WechatAuthProvider) Binding(ctx context.Context, code string) (*LoginRe
 
 	openID := result["openid"].(string)
 
-	members, err := s.memberRepository.GetMemberList(model.Member{
+	members, err := s.userRepository.GetUserList(ctx, model.User{
 		WXOpenID: openID,
 	})
 	if err != nil {
@@ -182,12 +182,12 @@ func (s *WechatAuthProvider) Binding(ctx context.Context, code string) (*LoginRe
 
 	var membersID int64 = 0
 	if len(members) == 0 {
-		newMember := model.Member{
+		newMember := model.User{
 			ID:       1,
 			WXOpenID: openID,
 			Status:   constant.ExternalMemberActive,
 		}
-		err := s.memberRepository.Create(&newMember)
+		err := s.userRepository.CreateUser(ctx, &newMember)
 		if err != nil {
 			hlog.Error("[LoginCredentialsVerification] memberRepository.Create", err)
 
