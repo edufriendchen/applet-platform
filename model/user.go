@@ -16,6 +16,6 @@ type User struct {
 }
 
 type SimpleUser struct {
-	Avatar   string `json:"avatar"`
+	Avatar   string `json:"avatar_url"`
 	NickName string `json:"nick_name"`
 }

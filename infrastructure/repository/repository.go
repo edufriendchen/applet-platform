@@ -9,14 +9,14 @@ import (
 type Repository struct {
 	ActivityRepository ActivityRepository
 	FileRepository     FileRepository
-	MemberRepository   MemberRepository
+	UserRepository     UserRepository
 }
 
 func NewRepository(conn *sqlx.DB) Repository {
 	return Repository{
 		ActivityRepository: ActivityRepository{conn},
 		FileRepository:     FileRepository{conn},
-		MemberRepository:   MemberRepository{conn},
+		UserRepository:     UserRepository{conn},
 	}
 }
 
@@ -28,13 +28,12 @@ type IActivityRepository interface {
 }
 
 type IFileRepository interface {
-	Create(req model.File) (int64, error)
-	Delete(req model.File) error
-	Update(req model.File) (int64, error)
-	Get(req model.File) ([]model.File, error)
+	CreateFileRecord(ctx context.Context, req *model.File) (int64, error)
+	DeleteFileRecord(ctx context.Context, req model.File) error
+	GetFileRecordList(ctx context.Context, req model.File) ([]model.File, error)
 }
 
-type IMemberRepository interface {
-	GetMemberList(req model.Member) ([]model.Member, error)
-	Create(req *model.Member) error
+type IUserRepository interface {
+	GetUserList(ctx context.Context, req model.User) ([]model.User, error)
+	CreateUser(ctx context.Context, req *model.User) error
 }

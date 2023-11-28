@@ -12,5 +12,5 @@ type BaseModel struct {
 type Pagination struct {
 	PerPage int  `json:"per_page"`
 	Page    int  `json:"page"`
-	IsDESC  bool `json:"is_desc"`
+	IsDesc  bool `json:"is_desc"`
 }

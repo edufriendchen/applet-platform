@@ -8,7 +8,6 @@ import (
 )
 
 func (s *Management) UploadFile(ctx context.Context, req model.UploadFileRequest) (*model.UploadFileResponse, error) {
-
 	res, err := s.storage.UploadFile(ctx, req)
 	if err != nil {
 		hlog.Error("[UploadFile] storage.UploadFile", err)
@@ -19,15 +18,15 @@ func (s *Management) UploadFile(ctx context.Context, req model.UploadFileRequest
 	defer func(s *Management, ctx context.Context, key string) {
 		err := s.DeleteFile(ctx, key)
 		if err != nil {
-			hlog.Error("[UploadFile] defer DeleteFile", err)
+			hlog.CtxErrorf(ctx, "[UploadFile] defer DeleteFile", err)
 		}
 	}(s, ctx, res.Key)
 
-	_, err = s.fileRepository.Create(model.File{
+	err = s.fileRepository.CreateFileRecord(ctx, &model.File{
 		Path: res.Path,
 	})
 	if err != nil {
-		hlog.Error("[UploadFile] fileRepository.Create", err)
+		hlog.CtxErrorf(ctx, "[UploadFile] fileRepository.Create", err)
 
 		return nil, err
 	}
@@ -36,10 +35,9 @@ func (s *Management) UploadFile(ctx context.Context, req model.UploadFileRequest
 }
 
 func (s *Management) DeleteFile(ctx context.Context, key string) error {
-
 	err := s.storage.DeleteFile(ctx, key)
 	if err != nil {
-		hlog.Error("[DeleteFile] storage.DeleteFile", err)
+		hlog.CtxErrorf(ctx, "[DeleteFile] storage.DeleteFile", err)
 
 		return err
 	}

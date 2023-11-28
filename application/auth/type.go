@@ -19,9 +19,9 @@ const (
 )
 
 type AuthService struct {
-	cache            cache.CacheStore
-	memberRepository repository.MemberRepository
-	tokenManager     jwt.TokenManagerService
+	cache          cache.CacheStore
+	userRepository repository.UserRepository
+	tokenManager   jwt.TokenManagerService
 }
 
 type IAuthService interface {

@@ -30,17 +30,17 @@ func NewApplication(
 	return Application{
 		ActivityService: activity.NewActivityService(cache, repository.ActivityRepository),
 		FileManagement:  file.NewFileManagement(storage, repository.FileRepository),
-		AuthManagement:  auth.NewAuthService(cache, repository.MemberRepository),
+		AuthManagement:  auth.NewAuthService(cache, repository.UserRepository),
 		WechatAuthManagement: auth.NewWechatAuthService(
 			viper.GetString("third.party.auth.wechat.app-id"),
 			viper.GetString("third.party.auth.wechat.app-secret"),
 			viper.GetString("third.party.auth.wechat.app-secret"),
-			repository.MemberRepository,
+			repository.UserRepository,
 			tokenManager),
 		TiktokAuthManagement: auth.NewTiktokAuthService(
 			viper.GetString("third.party.auth.tiktok.app-id"),
 			viper.GetString("third.party.auth.tiktok.app-secret"),
-			repository.MemberRepository,
+			repository.UserRepository,
 			tokenManager),
 	}
 }

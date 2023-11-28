@@ -69,7 +69,7 @@ func (mdb *ActivityRepository) GetActivityList(pagination model.Pagination, req 
 		filterQuery += " AND end_date <= ? "
 	}
 
-	if pagination.IsDESC {
+	if pagination.IsDesc {
 		filterQuery += " ORDER BY id DESC"
 	} else {
 		filterQuery += " ORDER BY id ASC"

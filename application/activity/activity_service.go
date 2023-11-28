@@ -43,10 +43,9 @@ func (s *Service) GetActivityList(ctx context.Context, req Request) ([]Response,
 			PosterUrl: item.PosterURL,
 			Title:     item.Title,
 			Type:      item.Type,
-			Welfare:   item.Welfare,
 			StartTime: item.StartTime,
 			EndTime:   item.EndTime,
-			Able:      item.Status == 1,
+			Status:    item.Status,
 			VisitNum:  int64(num),
 		})
 	}
@@ -62,8 +61,8 @@ func (s *Service) GetActivityDetail(ctx context.Context, id uint64) (DetailRespo
 // ParticipateActivity 参与活动
 func (s *Service) ParticipateActivity(ctx context.Context, id uint64) error {
 
-	memberID := ctx.Value(constant.CtxMemberIDInfo).(uint64)
-	if memberID == 0 {
+	userID := ctx.Value(constant.CtxUserIDInfo).(uint64)
+	if userID == 0 {
 		hlog.CtxErrorf(ctx, "[AbandonActivity] - Get Context with user id is 0")
 
 		return common.ErrUserNotFound
@@ -71,7 +70,7 @@ func (s *Service) ParticipateActivity(ctx context.Context, id uint64) error {
 
 	err := s.activityRepository.CreateActivityRecord(ctx, &model.ActivityRecord{
 		ActivityID:    id,
-		ParticipantID: memberID,
+		ParticipantID: userID,
 		Status:        constant.Pending,
 	})
 	if err != nil {
@@ -103,6 +102,7 @@ func (s *Service) AbandonActivity(ctx context.Context, req AbandonRequest) error
 func (s *Service) SubmitActivity(ctx context.Context, req model.Activity) error {
 
 	err := s.activityRepository.UpdateActivityRecord(ctx, &model.ActivityRecord{
+		Link:   "",
 		Note:   "",
 		Status: constant.Active,
 	})

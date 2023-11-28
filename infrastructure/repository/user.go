@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"github.com/edufriendchen/applet-platform/model"
 	"github.com/jmoiron/sqlx"
 )
@@ -9,11 +10,11 @@ type UserRepository struct {
 	conn *sqlx.DB
 }
 
-// GetMemberList 获取会员列表
-func (mdb *UserRepository) GetMemberList(req model.User) ([]model.User, error) {
+// GetUserList 获取用户列表
+func (mdb *UserRepository) GetUserList(ctx context.Context, req model.User) ([]model.User, error) {
 	return nil, nil
 }
 
-func (mdb *UserRepository) Create(req *model.User) error {
+func (mdb *UserRepository) CreateUser(ctx context.Context, req *model.User) error {
 	return nil
 }

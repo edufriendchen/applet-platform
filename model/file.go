@@ -2,12 +2,14 @@ package model
 
 import "mime/multipart"
 
+type FileType string
+
 type File struct {
-	ID     uint64 `gorm:"primaryKey"`
-	Path   string `json:"path"`
-	Bucket string `json:"bucket"`
-	Type   string `json:"type"`
-	Status int    `json:"status"`
+	ID     uint64   `json:"id"`
+	Path   string   `json:"path"`
+	Bucket string   `json:"bucket"`
+	Type   FileType `json:"type"`
+	Status int      `json:"status"`
 	BaseModel
 }
 

@@ -18,11 +18,11 @@ const (
 
 func NewAuthService(
 	cache cache.CacheStore,
-	memberRepository repository.MemberRepository,
+	userRepository repository.UserRepository,
 ) IAuthService {
 	return &AuthService{
-		cache:            cache,
-		memberRepository: memberRepository,
+		cache:          cache,
+		userRepository: userRepository,
 	}
 }
 
@@ -58,7 +58,7 @@ func (c *AuthService) ExternalAuthorize(ctx context.Context, authorization strin
 	}
 
 	//get status user
-	externalMembers, err := c.memberRepository.GetMemberList(model.Member{
+	externalMembers, err := c.userRepository.GetUserList(ctx, model.User{
 		ID: claims.UserID,
 	})
 	if err != nil {
@@ -117,7 +117,7 @@ func (c *AuthService) InternalAuthorize(ctx context.Context, authorization strin
 	}
 
 	//get status user
-	externalMembers, err := c.memberRepository.GetMemberList(model.Member{
+	externalMembers, err := c.userRepository.GetUserList(ctx, model.User{
 		ID: claims.UserID,
 	})
 	if err != nil {
@@ -176,7 +176,7 @@ func (c *AuthService) Login(ctx context.Context, authorization string) (context.
 	}
 
 	//get status user
-	externalMembers, err := c.memberRepository.GetMemberList(model.Member{
+	externalMembers, err := c.userRepository.GetUserList(ctx, model.User{
 		ID: claims.UserID,
 	})
 	if err != nil {

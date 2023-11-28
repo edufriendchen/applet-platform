@@ -22,14 +22,14 @@ type TiktokAuthProvider struct {
 	clientKey        string
 	clientSecret     string
 	cache            cache.CacheStore
-	memberRepository repository.MemberRepository
+	memberRepository repository.UserRepository
 	tokenManager     jwt.TokenManagerService
 }
 
 func NewTiktokAuthService(
 	clientKey string,
 	clientSecret string,
-	memberRepository repository.MemberRepository,
+	memberRepository repository.UserRepository,
 	tokenManager jwt.TokenManagerService,
 ) ThirdPartyAuthService {
 	return &TiktokAuthProvider{
@@ -101,7 +101,7 @@ func (s *TiktokAuthProvider) LoginCredentialsVerification(ctx context.Context, c
 
 	openID := result["openid"].(string)
 
-	members, err := s.memberRepository.GetMemberList(model.Member{
+	members, err := s.memberRepository.GetUserList(ctx, model.User{
 		WXOpenID: openID,
 	})
 	if err != nil {
@@ -112,12 +112,12 @@ func (s *TiktokAuthProvider) LoginCredentialsVerification(ctx context.Context, c
 
 	var membersID int64 = 0
 	if len(members) == 0 {
-		req := model.Member{
+		req := model.User{
 			WXOpenID: openID,
 			Status:   constant.ExternalMemberActive,
 		}
 
-		err := s.memberRepository.Create(&req)
+		err := s.memberRepository.CreateUser(ctx, &req)
 		if err != nil {
 			hlog.Error("[LoginCredentialsVerification] memberRepository.Create", err)
 

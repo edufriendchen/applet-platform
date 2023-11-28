@@ -11,5 +11,5 @@ const (
 type CtxInfo string
 
 const (
-	CtxMemberIDInfo CtxInfo = "member_id"
+	CtxUserIDInfo CtxInfo = "USER_ID"
 )

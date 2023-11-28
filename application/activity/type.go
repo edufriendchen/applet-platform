@@ -2,6 +2,7 @@ package activity
 
 import (
 	"context"
+	"github.com/edufriendchen/applet-platform/model"
 	"time"
 
 	"github.com/edufriendchen/applet-platform/constant"
@@ -46,26 +47,24 @@ type Response struct {
 	PosterUrl string                `json:"poster_url"`
 	Title     string                `json:"title"`
 	Type      constant.ActivityType `json:"type"`
-	Welfare   string                `json:"welfare"`
 	StartTime *time.Time            `json:"start_time"`
 	EndTime   *time.Time            `json:"end_time"`
-	Able      bool                  `json:"able"`
+	Status    constant.Status       `json:"able"`
 	VisitNum  int64                 `json:"visit_num"`
 }
 
 type DetailResponse struct {
-	ID        uint64    `json:"id"`
-	PosterUrl string    `json:"poster_url"`
-	Type      int       `json:"type"`
-	Title     string    `json:"title"`
-	Content   string    `json:"content"`
-	Welfare   string    `json:"welfare"`
-	StartTime time.Time `json:"start_time"`
-	EndTime   time.Time `json:"end_time"`
-	Able      bool      `json:"able"`
+	ID   uint64 `json:"id"`
+	Able bool   `json:"able"`
+	List []model.SimpleUser
 }
 
 type AbandonRequest struct {
 	ID     uint64 `json:"id"`
 	Reason string `json:"reason"`
+}
+
+type SubmitRequest struct {
+	ID     uint64 `json:"id"`
+	Submit string `json:"submit"`
 }
