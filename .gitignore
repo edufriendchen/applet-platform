@@ -1,0 +1,4 @@
+*.log
+.idea
+/config-dev.json
+/config-stg.json
